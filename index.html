@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard Gestor Serviços — Pendências e Retenções | TJCE</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -27,6 +27,9 @@
     --done: #14805F;
     --done-bg: #E0F5EE;
     --done-border: #C9ECDF;
+    --denied: #B0362C;
+    --denied-bg: #FBE7E5;
+    --denied-border: #F1C1BC;
     --info: #2B6CB5;
     --info-bg: #E4F0FC;
     --info-border: #CFE4F8;
@@ -56,24 +59,8 @@
     box-shadow: 0 8px 24px -12px rgba(13,44,80,0.45);
   }
   .header-inner { display: flex; align-items: center; gap: 16px; }
-  .tj-badge {
-    background: #fff;
-    border-radius: 12px;
-    padding: 8px 14px 8px 8px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-shrink: 0;
-  }
-  .tj-mono {
-    width: 34px; height: 34px;
-    border-radius: 9px;
-    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
-    color: #fff;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12.5px; font-weight: 800; letter-spacing: -0.02em;
-    flex-shrink: 0;
-  }
+  .tj-badge { background: #fff; border-radius: 12px; padding: 8px 14px 8px 8px; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .tj-mono { width: 34px; height: 34px; border-radius: 9px; background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12.5px; font-weight: 800; letter-spacing: -0.02em; flex-shrink: 0; }
   .tj-badge-text { display: flex; flex-direction: column; line-height: 1.2; }
   .tj-badge-text .m { font-size: 13px; font-weight: 700; color: var(--navy); letter-spacing: 0.01em; }
   .tj-badge-text .s { font-size: 10px; color: var(--text-sec-solid); }
@@ -82,13 +69,42 @@
   .header-title { font-size: 19px; font-weight: 700; margin: 0 0 3px; color: #fff; letter-spacing: -0.01em; }
   .header-sub { font-size: 13px; color: rgba(255,255,255,0.72); }
   .header-ref { font-size: 12px; color: rgba(255,255,255,0.65); white-space: nowrap; padding-right: 34px; }
-  .header-menu {
-    position: absolute; top: 14px; right: 14px;
-    width: 28px; height: 28px; border-radius: 50%;
-    background: rgba(255,255,255,0.14);
-    display: flex; align-items: center; justify-content: center;
-    color: rgba(255,255,255,0.8); font-size: 14px; letter-spacing: 1px;
+  .header-menu { position: absolute; top: 14px; right: 14px; width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.14); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.8); font-size: 14px; letter-spacing: 1px; }
+
+  /* ATUALIZAÇÕES RECENTES */
+  .updates-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px 24px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow);
   }
+  .updates-head { display: flex; align-items: center; gap: 9px; font-size: 13px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: var(--navy); margin-bottom: 14px; }
+  .updates-list { display: flex; flex-direction: column; gap: 10px; }
+  .update-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 11px 14px; border-radius: 10px; border: 1px solid var(--border);
+  }
+  .update-item.amber { background: #FFFBF3; border-color: var(--amber-border); }
+  .update-item.denied { background: #FDF5F4; border-color: var(--denied-border); }
+  .update-icon {
+    width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 12px; margin-top: 1px;
+  }
+  .update-icon.amber { background: var(--amber-bg); color: var(--amber); }
+  .update-icon.denied { background: var(--denied-bg); color: var(--denied); }
+  .update-body { flex: 1; min-width: 0; }
+  .update-tag {
+    font-size: 9.5px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;
+    margin-bottom: 3px; display: block;
+  }
+  .update-tag.amber { color: var(--amber); }
+  .update-tag.denied { color: var(--denied); }
+  .update-text { font-size: 13px; color: var(--text); line-height: 1.45; }
+  .update-text b { font-weight: 700; }
+  .update-ref { font-size: 11px; color: var(--text-sec-solid); font-family: var(--mono); margin-top: 3px; }
+  .update-date { font-size: 11px; color: var(--text-sec-solid); white-space: nowrap; margin-top: 1px; flex-shrink: 0; }
 
   /* SPOTLIGHT — próxima liberação */
   .spotlight {
@@ -105,34 +121,21 @@
     box-shadow: 0 10px 28px -18px rgba(181,115,14,0.45);
     overflow: hidden;
   }
-  .spotlight::before {
-    content: "";
-    position: absolute; left: 0; top: 0; bottom: 0; width: 6px;
-    background: linear-gradient(180deg, var(--amber) 0%, #E0A83E 100%);
-  }
-  .spotlight-icon {
-    width: 46px; height: 46px; border-radius: 12px;
-    background: var(--amber-bg); border: 1px solid var(--amber-border);
-    display: flex; align-items: center; justify-content: center; font-size: 21px;
-    flex-shrink: 0;
-  }
-  .spotlight-body .eyebrow {
-    font-size: 10.5px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--amber); margin-bottom: 4px;
-  }
+  .spotlight::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: linear-gradient(180deg, var(--amber) 0%, #E0A83E 100%); }
+  .spotlight-icon { width: 46px; height: 46px; border-radius: 12px; background: var(--amber-bg); border: 1px solid var(--amber-border); display: flex; align-items: center; justify-content: center; font-size: 21px; flex-shrink: 0; }
+  .spotlight-body .eyebrow { font-size: 10.5px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--amber); margin-bottom: 4px; }
   .spotlight-body .title { font-size: 15.5px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
-  .spotlight-body .num { font-family: var(--mono); font-size: 11px; color: var(--text-sec-solid); }
+  .spotlight-body .num { font-family: var(--mono); font-size: 11px; color: var(--text-sec-solid); margin-bottom: 6px; }
+  .spotlight-body .update {
+    font-size: 12px; color: var(--text-sec-solid); line-height: 1.5;
+    background: rgba(181,115,14,0.07); border-left: 2px solid var(--amber);
+    padding: 6px 10px; border-radius: 6px; max-width: 480px;
+  }
+  .spotlight-body .update b { color: var(--text); font-weight: 700; }
   .spotlight-value { text-align: right; }
   .spotlight-value .lbl { font-size: 10.5px; color: var(--text-sec-solid); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; }
   .spotlight-value .amt { font-size: 20px; font-weight: 800; color: var(--amber); }
-  .spotlight-countdown {
-    background: var(--navy);
-    color: #fff;
-    border-radius: 12px;
-    padding: 10px 16px;
-    text-align: center;
-    min-width: 118px;
-  }
+  .spotlight-countdown { background: var(--navy); color: #fff; border-radius: 12px; padding: 10px 16px; text-align: center; min-width: 118px; }
   .spotlight-countdown .days { font-size: 20px; font-weight: 800; line-height: 1; }
   .spotlight-countdown .lbl2 { font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(255,255,255,0.7); margin-top: 4px; }
   .spotlight-countdown .date { font-size: 10.5px; color: rgba(255,255,255,0.85); margin-top: 3px; font-family: var(--mono); }
@@ -154,29 +157,11 @@
   .kpi .foot { font-size: 11.5px; color: var(--text-sec-solid); margin-top: 6px; font-style: italic; }
 
   /* CHART CARD */
-  .chart-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 22px 26px;
-    margin-bottom: 22px;
-    box-shadow: var(--shadow);
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 34px;
-    align-items: center;
-  }
+  .chart-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 22px 26px; margin-bottom: 22px; box-shadow: var(--shadow); display: grid; grid-template-columns: auto 1fr; gap: 34px; align-items: center; }
   .chart-card .content-title { margin-bottom: 16px; }
   .donut-wrap { position: relative; width: 168px; height: 168px; flex-shrink: 0; }
-  .donut {
-    width: 168px; height: 168px; border-radius: 50%;
-    background: conic-gradient(var(--teal) 0% 72.6%, var(--amber) 72.6% 100%);
-  }
-  .donut-hole {
-    position: absolute; top: 16px; left: 16px; width: 136px; height: 136px;
-    background: var(--card); border-radius: 50%;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-  }
+  .donut { width: 168px; height: 168px; border-radius: 50%; background: conic-gradient(var(--teal) 0% 72.6%, var(--amber) 72.6% 100%); }
+  .donut-hole { position: absolute; top: 16px; left: 16px; width: 136px; height: 136px; background: var(--card); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
   .donut-hole .pct { font-size: 24px; font-weight: 800; color: var(--teal); line-height: 1; }
   .donut-hole .pct-lbl { font-size: 10px; color: var(--text-sec-solid); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; text-align: center; }
 
@@ -197,14 +182,7 @@
   .breakdown-mini .mini-lbl { font-size: 11px; color: var(--text-sec-solid); display: flex; justify-content: space-between; margin-top: 6px; }
 
   /* CONTENT CARD */
-  .content-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 22px 26px 8px;
-    margin-bottom: 22px;
-    box-shadow: var(--shadow);
-  }
+  .content-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 22px 26px 8px; margin-bottom: 22px; box-shadow: var(--shadow); }
   .content-head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 6px; }
   .content-title { display: flex; align-items: center; gap: 9px; font-size: 13px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: var(--navy); }
   .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
@@ -213,52 +191,25 @@
   .content-note { font-size: 12px; color: var(--text-sec-solid); max-width: 480px; text-align: right; }
 
   /* PROCESS ROWS */
-  .proc-row {
-    display: grid;
-    grid-template-columns: 1.6fr 1fr auto;
-    gap: 18px;
-    align-items: start;
-    padding: 16px 0;
-    border-bottom: 1px solid var(--border);
-  }
+  .proc-row { display: grid; grid-template-columns: 1.6fr 1fr auto; gap: 18px; align-items: start; padding: 16px 0; border-bottom: 1px solid var(--border); }
   .proc-row:last-child { border-bottom: none; }
-  .proc-row.featured {
-    background: linear-gradient(90deg, #FFF9EF 0%, rgba(255,255,255,0) 100%);
-    margin: 0 -22px;
-    padding: 16px 22px;
-    border-radius: 10px;
-    border-bottom: 1px solid var(--border);
-    position: relative;
-  }
-  .featured-flag {
-    display: inline-flex; align-items: center; gap: 5px;
-    font-size: 10px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase;
-    color: var(--amber); background: var(--amber-bg); border: 1px solid var(--amber-border);
-    padding: 2px 9px; border-radius: 10px; margin-bottom: 7px;
-  }
+  .proc-row.featured { background: linear-gradient(90deg, #FFF9EF 0%, rgba(255,255,255,0) 100%); margin: 0 -22px; padding: 16px 22px; border-radius: 10px; border-bottom: 1px solid var(--border); position: relative; }
+  .proc-row.denied { background: linear-gradient(90deg, #FDF3F2 0%, rgba(255,255,255,0) 100%); margin: 0 -22px; padding: 16px 22px; border-radius: 10px; }
+  .featured-flag { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--amber); background: var(--amber-bg); border: 1px solid var(--amber-border); padding: 2px 9px; border-radius: 10px; margin-bottom: 7px; }
+  .denied-flag { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--denied); background: var(--denied-bg); border: 1px solid var(--denied-border); padding: 2px 9px; border-radius: 10px; margin-bottom: 7px; }
   .proc-main .num { font-family: var(--mono); font-size: 11px; color: var(--text-sec-solid); margin-bottom: 5px; word-break: break-word; }
   .proc-main .desc { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; line-height: 1.35; }
-  .proc-main .assunto {
-    display: inline-block; font-size: 10.5px; color: var(--blue-mid);
-    background: var(--blue-bg); border: 1px solid var(--blue-border);
-    padding: 2px 9px; border-radius: 12px; margin-bottom: 7px; font-weight: 600;
-  }
+  .proc-main .assunto { display: inline-block; font-size: 10.5px; color: var(--blue-mid); background: var(--blue-bg); border: 1px solid var(--blue-border); padding: 2px 9px; border-radius: 12px; margin-bottom: 7px; font-weight: 600; }
   .proc-main .situacao { font-size: 12.5px; color: var(--text-sec-solid); line-height: 1.5; }
   .proc-values { font-size: 12px; color: var(--text-sec-solid); display: flex; flex-direction: column; gap: 6px; padding-top: 2px; }
   .proc-values .vline { display: flex; justify-content: space-between; gap: 10px; }
   .proc-values .vline b { color: var(--text); font-weight: 700; }
   .proc-values .vline b.amber-strong { color: var(--amber); font-size: 13.5px; }
-  .status-tag {
-    align-self: start; font-size: 10.5px; font-weight: 800; letter-spacing: 0.03em; text-transform: uppercase;
-    padding: 5px 12px; border-radius: 20px; white-space: nowrap;
-  }
+  .status-tag { align-self: start; font-size: 10.5px; font-weight: 800; letter-spacing: 0.03em; text-transform: uppercase; padding: 5px 12px; border-radius: 20px; white-space: nowrap; }
   .status-tag.pending { color: var(--amber); background: var(--pending-bg); border: 1px solid var(--pending-border); }
   .status-tag.done { color: var(--done); background: var(--done-bg); border: 1px solid var(--done-border); }
-  .xref {
-    margin-top: 8px; font-size: 11.5px; color: var(--info);
-    background: var(--info-bg); border: 1px dashed var(--info-border);
-    padding: 6px 10px; border-radius: 8px;
-  }
+  .status-tag.denied { color: var(--denied); background: var(--denied-bg); border: 1px solid var(--denied-border); }
+  .xref { margin-top: 8px; font-size: 11.5px; color: var(--info); background: var(--info-bg); border: 1px dashed var(--info-border); padding: 6px 10px; border-radius: 8px; }
 
   @media (max-width: 820px) {
     .kpis { grid-template-columns: repeat(2,1fr); }
@@ -267,12 +218,11 @@
     .spotlight { grid-template-columns: auto 1fr; }
     .spotlight-value, .spotlight-countdown { grid-column: span 2; justify-self: start; text-align: left; }
     .chart-card { grid-template-columns: 1fr; justify-items: center; }
+    .update-item { flex-wrap: wrap; }
+    .update-date { margin-left: 38px; }
   }
 
-  footer {
-    margin-top: 8px; padding: 16px 4px 0; border-top: 1px solid var(--border);
-    font-size: 11.5px; color: var(--text-sec-solid); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
-  }
+  footer { margin-top: 8px; padding: 16px 4px 0; border-top: 1px solid var(--border); font-size: 11.5px; color: var(--text-sec-solid); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
 </style>
 </head>
 <body>
@@ -298,6 +248,31 @@
     </div>
   </header>
 
+  <!-- ATUALIZAÇÕES RECENTES -->
+  <div class="updates-card">
+    <div class="updates-head">&#128276; Atualizações Recentes</div>
+    <div class="updates-list">
+      <div class="update-item amber">
+        <div class="update-icon amber">&#9993;</div>
+        <div class="update-body">
+          <span class="update-tag amber">CT nº 63/2023 · Conta Vinculada</span>
+          <div class="update-text">Ofício encaminhado ao banco solicitando a liberação do valor de <b>R$ 49.120,06</b>. Aguardando efetivação pelo banco.</div>
+          <div class="update-ref">8515255-29.2026.8.06.0000 e 8528455-42.2025.8.06.000</div>
+        </div>
+        <div class="update-date">Atualizado agora</div>
+      </div>
+      <div class="update-item denied">
+        <div class="update-icon denied">&#10060;</div>
+        <div class="update-body">
+          <span class="update-tag denied">CT nº 15/2019 · Conta Vinculada</span>
+          <div class="update-text">A Diretoria de Fiscalização Trabalhista concluiu a análise dos documentos do processo e <b>não reconheceu comprovação para a liberação</b> — pedido indeferido.</div>
+          <div class="update-ref">8515252-86.2026.8.06.0000 e 8515777-58.2026.8.06.0000</div>
+        </div>
+        <div class="update-date">Atualizado agora</div>
+      </div>
+    </div>
+  </div>
+
   <!-- SPOTLIGHT: próxima liberação -->
   <div class="spotlight">
     <div class="spotlight-icon">&#128276;</div>
@@ -305,6 +280,7 @@
       <div class="eyebrow">Próxima liberação prevista</div>
       <div class="title">Liberação — Conta Vinculada — CT nº 63/2023</div>
       <div class="num">8515255-29.2026.8.06.0000 e 8528455-42.2025.8.06.000</div>
+      <div class="update">Ofício encaminhado ao banco solicitando a liberação. <b>Aguardando efetivação pelo banco.</b></div>
     </div>
     <div class="spotlight-value">
       <div class="lbl">Valor em liberação</div>
@@ -321,7 +297,7 @@
     <div class="kpi blue">
       <div class="label">Processos Monitorados</div>
       <div class="value">11</div>
-      <div class="foot">5 em andamento · 6 regularizados</div>
+      <div class="foot">4 em andamento · 6 pagos · 1 indeferido</div>
     </div>
     <div class="kpi neutral">
       <div class="label">Total Histórico Solicitado</div>
@@ -400,7 +376,7 @@
         <div class="num">8515255-29.2026.8.06.0000 e 8528455-42.2025.8.06.000</div>
         <div class="desc">Liberação — Conta Vinculada — CT nº 63/2023</div>
         <div class="assunto">Conta Vinculada</div>
-        <div class="situacao">Em fase de liberação. Previsão de liberação/pagamento em 08/07/2026.</div>
+        <div class="situacao">Ofício encaminhado ao banco solicitando a liberação do valor. Aguardando efetivação da liberação pelo banco. Previsão de liberação/pagamento em 08/07/2026.</div>
       </div>
       <div class="proc-values">
         <div class="vline"><span>Valor em liberação</span><b class="amber-strong">R$ 49.120,06</b></div>
@@ -415,19 +391,6 @@
         <div class="desc">Liberação — Conta Vinculada — CT nº 103/2019</div>
         <div class="assunto">Conta Vinculada</div>
         <div class="situacao">Encontra-se na SGP aguardando complemento de informações por parte da empresa.</div>
-      </div>
-      <div class="proc-values">
-        <div class="vline"><span>Valor pedido</span><b>Não informado</b></div>
-      </div>
-      <div class="status-tag pending">Em andamento</div>
-    </div>
-
-    <div class="proc-row">
-      <div class="proc-main">
-        <div class="num">8515252-86.2026.8.06.0000 e 8515777-58.2026.8.06.0000</div>
-        <div class="desc">Liberação — Conta Vinculada — CT nº 15/2019</div>
-        <div class="assunto">Conta Vinculada</div>
-        <div class="situacao">Em análise na Diretoria de Fiscalização Trabalhista.</div>
       </div>
       <div class="proc-values">
         <div class="vline"><span>Valor pedido</span><b>Não informado</b></div>
@@ -467,7 +430,21 @@
   <div class="content-card">
     <div class="content-head">
       <div class="content-title"><span class="dot done"></span> Regularizados — Histórico Concluído</div>
-      <div class="content-note">Processos já pagos ou liberados, mantidos aqui para controle integral e ciência do gestor do contrato.</div>
+      <div class="content-note">Processos já finalizados — pagos ou indeferidos — mantidos aqui para controle integral e ciência do gestor do contrato.</div>
+    </div>
+
+    <div class="proc-row denied">
+      <div class="proc-main">
+        <div class="denied-flag">&#9888; Indeferido</div>
+        <div class="num">8515252-86.2026.8.06.0000 e 8515777-58.2026.8.06.0000</div>
+        <div class="desc">Liberação — Conta Vinculada — CT nº 15/2019</div>
+        <div class="assunto">Conta Vinculada</div>
+        <div class="situacao">A Diretoria de Fiscalização Trabalhista analisou os documentos constantes no processo e entendeu que não houve comprovação suficiente para a liberação. O pedido foi indeferido.</div>
+      </div>
+      <div class="proc-values">
+        <div class="vline"><span>Valor pedido</span><b>Não informado</b></div>
+      </div>
+      <div class="status-tag denied">Indeferido</div>
     </div>
 
     <div class="proc-row">
