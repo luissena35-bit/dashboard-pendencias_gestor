@@ -78,13 +78,16 @@
   .update-item { display: flex; align-items: flex-start; gap: 12px; padding: 11px 14px; border-radius: 10px; border: 1px solid var(--border); }
   .update-item.teal { background: #F2FBF7; border-color: var(--teal-border); }
   .update-item.denied { background: #FDF5F4; border-color: var(--denied-border); }
+  .update-item.info { background: #F2F7FD; border-color: var(--info-border); }
   .update-icon { width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; margin-top: 1px; }
   .update-icon.teal { background: var(--teal-bg); color: var(--teal); }
   .update-icon.denied { background: var(--denied-bg); color: var(--denied); }
+  .update-icon.info { background: var(--info-bg); color: var(--info); }
   .update-body { flex: 1; min-width: 0; }
   .update-tag { font-size: 9.5px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 3px; display: block; }
   .update-tag.teal { color: var(--teal); }
   .update-tag.denied { color: var(--denied); }
+  .update-tag.info { color: var(--info); }
   .update-text { font-size: 13px; color: var(--text); line-height: 1.45; }
   .update-text b { font-weight: 700; }
   .update-ref { font-size: 11px; color: var(--text-sec-solid); font-family: var(--mono); margin-top: 3px; }
@@ -218,6 +221,15 @@
         </div>
         <div class="update-date">Atualizado recentemente</div>
       </div>
+      <div class="update-item info">
+        <div class="update-icon info">&#8618;</div>
+        <div class="update-body">
+          <span class="update-tag info">Apuração de Responsabilidade</span>
+          <div class="update-text">Processo encaminhado à <b>Diretoria de Fiscalização Trabalhista</b> para complemento de informações solicitadas pela CONJUR.</div>
+          <div class="update-ref">8511613-70.2025.8.06.0001</div>
+        </div>
+        <div class="update-date">Atualizado agora</div>
+      </div>
     </div>
   </div>
 
@@ -325,7 +337,7 @@
         <div class="num">8511613-70.2025.8.06.0001</div>
         <div class="desc">Apuração de Responsabilidade</div>
         <div class="assunto">Apuração de Responsabilidade</div>
-        <div class="situacao">Em andamento. Atualmente encontra-se na CONJUR para análise.</div>
+        <div class="situacao">Encontra-se na Diretoria de Fiscalização Trabalhista para complemento de informações solicitadas pela CONJUR.</div>
         <div class="xref">&#8618; Vinculado ao faturamento de Setembro/2025 (proc. 8524075-11.2025.8.06.0000), retido até conclusão desta apuração.</div>
       </div>
       <div class="proc-values">
