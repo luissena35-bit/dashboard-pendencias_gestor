@@ -79,15 +79,18 @@
   .update-item.teal { background: #F2FBF7; border-color: var(--teal-border); }
   .update-item.denied { background: #FDF5F4; border-color: var(--denied-border); }
   .update-item.info { background: #F2F7FD; border-color: var(--info-border); }
+  .update-item.amber { background: #FFFBF3; border-color: var(--amber-border); }
   .update-icon { width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; margin-top: 1px; }
   .update-icon.teal { background: var(--teal-bg); color: var(--teal); }
   .update-icon.denied { background: var(--denied-bg); color: var(--denied); }
   .update-icon.info { background: var(--info-bg); color: var(--info); }
+  .update-icon.amber { background: var(--amber-bg); color: var(--amber); }
   .update-body { flex: 1; min-width: 0; }
   .update-tag { font-size: 9.5px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 3px; display: block; }
   .update-tag.teal { color: var(--teal); }
   .update-tag.denied { color: var(--denied); }
   .update-tag.info { color: var(--info); }
+  .update-tag.amber { color: var(--amber); }
   .update-text { font-size: 13px; color: var(--text); line-height: 1.45; }
   .update-text b { font-weight: 700; }
   .update-ref { font-size: 11px; color: var(--text-sec-solid); font-family: var(--mono); margin-top: 3px; }
@@ -195,7 +198,7 @@
         <h1 class="header-title">Dashboard de Pendências e Retenções</h1>
         <div class="header-sub">Gestor Serviços &nbsp;·&nbsp; CT nº 103/2019, CT nº 15/2019 e CT nº 63/2023 &nbsp;·&nbsp; SEGOV / ECP</div>
       </div>
-      <div class="header-ref">Ref: Julho/2026</div>
+      <div class="header-ref">Ref: Agosto/2026</div>
     </div>
   </header>
 
@@ -203,6 +206,23 @@
   <div class="updates-card">
     <div class="updates-head">&#128276; Atualizações Recentes</div>
     <div class="updates-list">
+      <div class="update-item amber">
+        <div class="update-icon amber">&#128196;</div>
+        <div class="update-body">
+          <span class="update-tag amber">CT nº 103/2019 · Conta Vinculada</span>
+          <div class="update-text">Solicitação de complemento de informações encaminhada à empresa em <b>09/07/2026</b>. Aguardando resposta.</div>
+          <div class="update-ref">8515248-08.2026.8.06.0000 e 8515783-04.2026.8.06.0000</div>
+        </div>
+        <div class="update-date">09/07/2026</div>
+      </div>
+      <div class="update-item amber">
+        <div class="update-icon amber">&#128196;</div>
+        <div class="update-body">
+          <span class="update-tag amber">CT nº 63/2023 · Conta Vinculada</span>
+          <div class="update-text">Empresa encaminhou <b>nova documentação</b> para liberação do valor restante. Em análise pela Diretoria de Fiscalização Trabalhista. <b>Prazo: até 07/08/2026.</b></div>
+        </div>
+        <div class="update-date">Atualizado agora</div>
+      </div>
       <div class="update-item teal">
         <div class="update-icon teal">&#10003;</div>
         <div class="update-body">
@@ -225,10 +245,10 @@
         <div class="update-icon info">&#8618;</div>
         <div class="update-body">
           <span class="update-tag info">Apuração de Responsabilidade</span>
-          <div class="update-text">Processo em análise. Será encaminhado hoje à <b>CONJUR</b> em atenção às informações solicitadas.</div>
+          <div class="update-text">A SEGOV retornou o processo à <b>CONJUR</b> hoje (06/08/2026). Encontra-se sob análise jurídica.</div>
           <div class="update-ref">8511613-70.2025.8.06.0001</div>
         </div>
-        <div class="update-date">21/07/2026</div>
+        <div class="update-date">06/08/2026</div>
       </div>
     </div>
   </div>
@@ -236,8 +256,8 @@
   <div class="kpis">
     <div class="kpi blue">
       <div class="label">Processos Monitorados</div>
-      <div class="value">11</div>
-      <div class="foot">3 em andamento · 7 pagos · 1 indeferido</div>
+      <div class="value">12</div>
+      <div class="foot">4 em andamento · 7 pagos · 1 indeferido</div>
     </div>
     <div class="kpi neutral">
       <div class="label">Total Histórico Solicitado</div>
@@ -337,11 +357,25 @@
         <div class="num">8511613-70.2025.8.06.0001</div>
         <div class="desc">Apuração de Responsabilidade</div>
         <div class="assunto">Apuração de Responsabilidade</div>
-        <div class="situacao">Em análise. Será encaminhado hoje (21/07/2026) à CONJUR em atenção às informações solicitadas.</div>
+        <div class="situacao">A SEGOV retornou o processo à CONJUR hoje (06/08/2026). Encontra-se sob análise jurídica.</div>
         <div class="xref">&#8618; Vinculado ao faturamento de Setembro/2025 (proc. 8524075-11.2025.8.06.0000), retido até conclusão desta apuração.</div>
       </div>
       <div class="proc-values">
         <div class="vline"><span>Valor pedido</span><b>—</b></div>
+      </div>
+      <div class="status-tag pending">Em andamento</div>
+    </div>
+
+    <div class="proc-row">
+      <div class="proc-main">
+        <div class="num">CT nº 63/2023</div>
+        <div class="desc">Liberação de saldo remanescente — Conta Vinculada — CT nº 63/2023</div>
+        <div class="assunto">Conta Vinculada</div>
+        <div class="situacao">Empresa encaminhou nova documentação para liberação do valor restante. Em análise pela Diretoria de Fiscalização Trabalhista.</div>
+      </div>
+      <div class="proc-values">
+        <div class="vline"><span>Valor pedido</span><b>Não informado</b></div>
+        <div class="vline"><span>Prazo</span><b>Até 07/08/2026</b></div>
       </div>
       <div class="status-tag pending">Em andamento</div>
     </div>
